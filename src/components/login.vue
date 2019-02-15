@@ -15,37 +15,38 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       formdata: {
-        username: '',
-        password: ''
+        username: "",
+        password: ""
       }
-    }
+    };
   },
   methods: {
     // 发起登录请求
-    handlelogin () {
-      this.$http
-        .post(`login`, this.formdata)
-        .then(res => {
-            console.log(res)
-            const {
-                data: {
-                    data,
-                    meta:{msg,status}
-                }
-            } = res
-            if(status===200){
-                console.log('login---成功');
-            }else{
-                console.log('失败');
-                
-            }
-      })
+    async handlelogin() {
+      const res = await this.$http.post(`login`, this.formdata);
+      const {
+        data: {
+          data: {token},
+          meta: { msg, status }
+        }
+      } = res
+      //
+      if (status === 200) {
+        console.log("login---成功")
+        localStorage.setItem('token',token)
+
+        this.$router.push({
+          name: "home"
+        })
+      } else {
+        this.$message.error(msg)
+      }
     }
   }
-}
+};
 </script>
 
 <style>
